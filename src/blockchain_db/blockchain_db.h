@@ -1888,10 +1888,10 @@ public:
   }
   void stop()
   {
-    if (readonly)
-      db->block_rtxn_stop();
-    else
+    if (!readonly)
       db->block_wtxn_stop();
+    else if (active)
+      db->block_rtxn_stop();
     active = false;
   }
   void abort()
