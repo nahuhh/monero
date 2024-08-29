@@ -1239,13 +1239,19 @@ namespace cryptonote
              << " blocks median size is " << median_weight
              << " bytes and the max average blocksize in the queue is " << average_blocksize_of_biggest_batch << " bytes");
       uint64_t projected_blocksize = (average_blocksize_of_biggest_batch > median_weight) ? average_blocksize_of_biggest_batch : median_weight;
-      if ((projected_blocksize * BLOCKS_MEDIAN_WINDOW) < batch_max_weight) {
-        res = BLOCKS_MEDIAN_WINDOW;
-        MGINFO_YELLOW("blocks are tiny, " << projected_blocksize << " bytes, sync " << res << " blocks in next batch");
+      if (median_weight > average_blocksize_of_biggest_batch) {
+        if ((projected_blocksize * BLOCKS_MEDIAN_WINDOW) < batch_max_weight) {
+          res = BLOCKS_MEDIAN_WINDOW;
+          MGINFO_YELLOW("blocks are tiny, " << projected_blocksize << " bytes, sync " << res << " blocks in next batch");
+        }
+        else {
+          res = batch_max_weight / projected_blocksize;
+          MGINFO_YELLOW("projected blocksize is " << projected_blocksize << " bytes, sync " << res << " blocks in next batch");
+        }
       }
-      else if (projected_blocksize >= batch_max_weight) {
-        res = 1;
-        MGINFO_YELLOW("blocks are projected to surpass " << batch_max_weight << " bytes, syncing just a single block in next batch");
+      else if ((projected_blocksize * BATCH_MAX_QUANTITY) < batch_max_weight) {
+        res = BATCH_MAX_QUANTITY;
+        MGINFO_YELLOW("Syncing " << BATCH_MAX_QUANTITY << " yolo.");
       }
       else if (projected_blocksize > BLOCKS_HUGE_THRESHOLD_SIZE) {
         res = 1;
