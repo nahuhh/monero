@@ -2,7 +2,7 @@
 name: "monero-linux-0.18"
 enable_cache: true
 suites:
-- "bionic"
+- "focal"
 architectures:
 - "amd64"
 packages:
@@ -101,7 +101,7 @@ script: |
   # x86 needs /usr/include/i386-linux-gnu/asm pointed to /usr/include/x86_64-linux-gnu/asm,
   # but we can't write there. Instead, create a link here and force it to be included in the
   # search paths.
-  # This problem goes away if linux-libc-dev:i386 pkg exists, but it's not in bionic.
+  # This problem goes away if linux-libc-dev:i386 pkg exists, but it's not in focal.
 
   mkdir -p $EXTRA_INCLUDES_BASE/i686-linux-gnu
   rm -f $WRAP_DIR/extra_includes/i686-linux-gnu/asm
