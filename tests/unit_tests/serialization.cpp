@@ -1121,7 +1121,7 @@ TEST(Serialization, portability_signed_tx)
   ASSERT_TRUE(ptx.dests[0].amount == 1400000000000);
   ASSERT_TRUE(cryptonote::get_account_address_as_str(nettype, false, ptx.dests[0].addr) == "9xnhrMczQkPeoGi6dyu6BgKAYX4tZsDs6KHCkyTStDBKL4M4pM1gfCR3utmTAcSaKHGa1R5o266FbdnubErmij3oMdLyYgA");
   // ptx.construction_data
-  auto& tcd = ptx.construction_data;
+  auto& tcd = std::get<tools::wallet2::tx_construction_data>(ptx.construction_data);
   ASSERT_TRUE(tcd.sources.size() == 1);
   auto& tse = tcd.sources[0];
   // ptx.construction_data.sources[0].outputs
@@ -1486,5 +1486,34 @@ TEST(Serialization, tx_fcmp_pp)
     epee::string_tools::parse_hexstr_to_binbuff(blob_str, smaller_blob);
 
     ASSERT_FALSE(serialization::parse_binary(smaller_blob, tx1));
+  }
+}
+
+TEST(Serialization, BinaryArchiveConstantVarInts)
+{
+  struct VarIntPair
+  {
+    uint64_t varint;
+    uint64_t len;
+  };
+
+  // If any of these fail, modify tx weight calculations
+  static constexpr VarIntPair constant_varints[] = {
+    { FCMP_PLUS_PLUS_MAX_INPUTS                , 1 },
+    { FCMP_PLUS_PLUS_MAX_OUTPUTS               , 1 },
+    { 127                                      , 1 },
+    { 128                                      , 2 },
+    { MAX_TX_EXTRA_SIZE                        , 2 },
+    { std::numeric_limits<uint64_t>::max() - 1 , 10 /*max_u64_varint_len*/ },
+    { CRYPTONOTE_MAX_BLOCK_NUMBER              , 5 /*max_block_index_varint_len*/ },
+  };
+
+  for (const auto &const_varint : constant_varints)
+  {
+    ostringstream oss;
+    binary_archive<true> oar(oss);
+    oar.serialize_varint(const_varint.varint);
+    ASSERT_TRUE(oss.good());
+    ASSERT_EQ(const_varint.len, oss.str().size());
   }
 }
