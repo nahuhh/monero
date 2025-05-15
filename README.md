@@ -1,3 +1,19 @@
+# FCMP++
+
+In addition to the standard [dependencies](#dependencies), you also need rust.    
+At least on Debian 12, the rust version in the repository is too old.    
+Install the latest rust version on your system with:
+
+```bash
+curl -sSf https://sh.rustup.rs | sh
+```
+
+Build as usual:
+
+```
+make -j6
+```
+
 # Monero
 
 Copyright (c) 2014-2024, The Monero Project
