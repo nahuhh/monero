@@ -467,6 +467,13 @@ namespace cryptonote
      void set_enforce_dns_checkpoints(bool enforce_dns);
 
      /**
+      * @copydoc core::get_enforce_dns_checkpoints
+      *
+      * @note get whether or not we enforce DNS checkpoints
+      */
+     bool get_enforce_dns_checkpoints() const;
+
+     /**
       * @brief set whether or not to enable or disable DNS checkpoints
       *
       * @param disble whether to disable DNS checkpoints

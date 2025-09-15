@@ -261,6 +261,11 @@ namespace cryptonote
   {
     m_blockchain_storage.set_enforce_dns_checkpoints(enforce_dns);
   }
+  //-----------------------------------------------------------------------------------
+  bool core::get_enforce_dns_checkpoints() const
+  {
+    return m_blockchain_storage.get_enforce_dns_checkpoints();
+  }
   //-----------------------------------------------------------------------------------------------
   bool core::update_checkpoints(const bool skip_dns /* = false */)
   {
@@ -269,7 +274,10 @@ namespace cryptonote
     if (m_checkpoints_updating.test_and_set()) return true;
 
     bool res = true;
-    if (!skip_dns && time(NULL) - m_last_dns_checkpoints_update >= 3600)
+    if (!skip_dns && (
+      (get_enforce_dns_checkpoints() && time(NULL) - m_last_dns_checkpoints_update >= 120) ||
+      (time(NULL) - m_last_dns_checkpoints_update >= 3600)
+    ))
     {
       res = m_blockchain_storage.update_checkpoints(m_checkpoints_path, true);
       m_last_dns_checkpoints_update = time(NULL);
