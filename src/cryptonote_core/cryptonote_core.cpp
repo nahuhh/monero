@@ -275,7 +275,7 @@ namespace cryptonote
 
     bool res = true;
     if (!skip_dns && (
-      (get_enforce_dns_checkpoints() && time(NULL) - m_last_dns_checkpoints_update >= 120) ||
+      (get_enforce_dns_checkpoints() && time(NULL) - m_last_dns_checkpoints_update >= 60) ||
       (time(NULL) - m_last_dns_checkpoints_update >= 3600)
     ))
     {
