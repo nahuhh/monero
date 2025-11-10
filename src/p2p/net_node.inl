@@ -891,6 +891,7 @@ namespace nodetool
           "plowsofe6cleftfmk2raiw5h2x66atrik3nja4bfd3zrfa2hdlgworad.onion:18083",
           "aclc4e2jhhtr44guufbnwk5bzwhaecinax4yip4wr4tjn27sjsfg6zqd.onion:18083",
           "lykcas4tus7mkm4bhsgqe4drtd4awi7gja24goscc47xfgzj54yofyqd.onion:18083",
+          "n2iywjhluj6r3d7iihszijndngc6vb7hxwjtdjccz77677clqanfrmqd.onion:18084",
         };
       }
       return {};
